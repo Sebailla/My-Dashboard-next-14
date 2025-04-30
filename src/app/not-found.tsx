@@ -1,5 +1,5 @@
 
-import { Sidebar } from '@/components/Sidebar'
+import { Sidebar } from '@/components/sidebar/Sidebar'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
