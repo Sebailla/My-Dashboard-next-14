@@ -1,7 +1,10 @@
+'use client'
 import Link from "next/link"
 import { SimplePokemon } from "../interfaces"
 import Image from "next/image"
-import { IoHeartOutline } from "react-icons/io5"
+import { IoHeart, IoHeartOutline } from "react-icons/io5"
+import { useAppDispatch, useAppSelector } from "@/store"
+import { toggleFavorite } from "@/store/pokemons/pokemonsSlice"
 
 interface Props {
     pokemon: SimplePokemon
@@ -9,7 +12,15 @@ interface Props {
 
 export const PokemonCard = ({ pokemon }: Props) => {
 
-    const { name } = pokemon
+    const { id, name } = pokemon
+
+    // La doble !! es para transformar un valor en booleano
+    const isFavorite = useAppSelector(state => !!state.pokemons.favorite[id])
+    const dispatch = useAppDispatch()
+
+    const onToggle = () => {
+        dispatch(toggleFavorite(pokemon))
+    }
 
     return (
 
@@ -36,17 +47,33 @@ export const PokemonCard = ({ pokemon }: Props) => {
                     </div>
                 </div>
                 <div className="border-b">
-                    <Link href="/dashboard/main" className="px-4 py-2 hover:bg-gray-100 flex items-center">
+                    <div 
+                        onClick={onToggle}
+                        className="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer"
+                        >
                         <div className="text-red-600">
-                            <IoHeartOutline size={25}/>
+                            {
+                                isFavorite
+                                    ?
+                                    <IoHeart size={25} />
+                                    :
+                                    <IoHeartOutline size={25} />
+                            }
+
                         </div>
                         <div className="pl-3">
                             <p className="text-sm font-medium text-gray-800 leading-none">
-                                Not Favorite
+                                {
+                                    isFavorite
+                                        ?
+                                        'Favorite'
+                                        :
+                                        'Not Favorite'
+                                }
                             </p>
-                            <p className="text-xs text-gray-500">Clik your favorite</p>
+                            {/* <p className="text-xs text-gray-500">Clik your favorite</p> */}
                         </div>
-                    </Link>
+                    </div>
                     {/* <Link href="/dashboard/main" className="px-4 py-2 hover:bg-gray-100 flex">
                         <div className="text-gray-800">
                             <svg
@@ -66,7 +93,7 @@ export const PokemonCard = ({ pokemon }: Props) => {
                             <p className="text-xs text-gray-500">View your last donations</p>
                         </div>
                     </Link>*/}
-                </div> 
+                </div>
 
                 {/* <div className="">
                     <a href="#" className="w-full px-4 py-2 pb-4 hover:bg-gray-100 flex">
